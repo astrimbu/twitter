@@ -56,17 +56,22 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <h1 className="App-title">Welcome to React</h1>
+          <h1 className="App-title">Tweet Retriever</h1>
         </header>
-        <form>
+        <Break />
+        <form className="main-form">
           <p className="App-intro">
-            To get started, enter a search query:<br />
+            To get started, search for something:<br />
             <input type="text" onChange={this.handleChange} />
             <input type="submit" onClick={this.handleSubmit} />
           </p>
         </form>
+        <ShadowBreak />
         {this.state.result_obtained &&
-          <Results results={this.state.results} />
+          <div className="results-container">
+            <Results results={this.state.results} query={this.state.search_query} />
+            <ShadowBreak />
+          </div>
         }
       </div>
     );
@@ -81,7 +86,12 @@ class Results extends Component {
     let results_json = parsed_results[0].twitter_result
     let num_results = results_json.length
     for (var i = 0; i < num_results; i++) {
-      results.push(<p>{results_json[i]}</p>)
+      results.push(
+        <div>
+          <p className="result">{results_json[i]}</p>
+          <Dash />
+        </div>
+      )
     }
     return results
   }
@@ -89,12 +99,28 @@ class Results extends Component {
   render() {
     let results = this.json_response_to_jsx_results()
     return (
-      <p className="App-intro">
+      <div className="results">
+        <h1><i>Tweets about "{this.props.query}":</i></h1>        
+        <Dash />
         {results}
-      </p>
+        <div className="bottom">1/1</div>
+      </div>
     )
   }
 }
+
+const Dash = () => (
+    <div className="dash"></div>
+)
+const Break = () => (
+    <div className="break"></div>
+)
+const ShadowBreak = () => (
+    <div>
+      <div className="shadow"></div>
+      <div className="break"></div>
+    </div>
+)
 
 ReactDOM.render(<App />, document.getElementById('root'))
 registerServiceWorker()
